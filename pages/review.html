@@ -14,37 +14,47 @@
 
   <!-- Page header -->
   <div class="page-header">
-    <h1><i class="bi bi-star-fill me-2"></i>Reviews</h1>
+    <div class="page-header-icon"><i class="bi bi-star-fill"></i></div>
+    <h1>Reviews</h1>
     <p>Share your experience and help others discover great solutions.</p>
   </div>
 
-  <div class="container" style="max-width:820px">
+  <div class="container" style="max-width:860px">
     <div class="row g-4 align-items-start">
 
       <!-- ── Submit form ─────────────────────────────────────── -->
       <div class="col-lg-5">
         <div class="card-panel">
-          <h5 style="font-weight:700;margin-bottom:20px">Write a Review</h5>
-
-          <label class="form-label-custom" for="commentInput">Your Comment</label>
-          <input type="text" class="form-control-custom" id="commentInput"
-                 placeholder="Share your experience...">
-
-          <label class="form-label-custom">Rating</label>
-          <div class="star-rating mb-2">
-            <input type="radio" id="s5" name="rating" value="5">
-            <label for="s5" title="5 stars"></label>
-            <input type="radio" id="s4" name="rating" value="4">
-            <label for="s4" title="4 stars"></label>
-            <input type="radio" id="s3" name="rating" value="3">
-            <label for="s3" title="3 stars"></label>
-            <input type="radio" id="s2" name="rating" value="2">
-            <label for="s2" title="2 stars"></label>
-            <input type="radio" id="s1" name="rating" value="1">
-            <label for="s1" title="1 star"></label>
+          <div class="card-panel-header">
+            <i class="bi bi-pencil-square"></i>
+            <span>Write a Review</span>
           </div>
 
-          <button class="btn-submit mt-3" onclick="submitReview()">
+          <div class="field-group">
+            <label class="field-label" for="nameInput">Your Name</label>
+            <input type="text" class="field-input" id="nameInput"
+                   placeholder="Enter your name…">
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="commentInput">Your Experience</label>
+            <textarea class="field-input" id="commentInput" rows="4"
+                      placeholder="Tell us what you think — what went well, what could improve…"></textarea>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Your Rating</label>
+            <div class="star-row" id="starRow">
+              <button type="button" class="star-btn" data-val="1" onclick="selectStar(1)"><i class="bi bi-star-fill"></i></button>
+              <button type="button" class="star-btn" data-val="2" onclick="selectStar(2)"><i class="bi bi-star-fill"></i></button>
+              <button type="button" class="star-btn" data-val="3" onclick="selectStar(3)"><i class="bi bi-star-fill"></i></button>
+              <button type="button" class="star-btn" data-val="4" onclick="selectStar(4)"><i class="bi bi-star-fill"></i></button>
+              <button type="button" class="star-btn" data-val="5" onclick="selectStar(5)"><i class="bi bi-star-fill"></i></button>
+            </div>
+            <div class="rating-hint" id="ratingHint">Tap a star to rate</div>
+          </div>
+
+          <button class="btn-submit" id="submitBtn" onclick="submitReview()">
             <i class="bi bi-send-fill"></i> Submit Review
           </button>
         </div>
@@ -53,7 +63,11 @@
       <!-- ── Review list ─────────────────────────────────────── -->
       <div class="col-lg-7">
         <div class="card-panel">
-          <h5 style="font-weight:700;margin-bottom:20px">Recent Reviews</h5>
+          <div class="card-panel-header">
+            <i class="bi bi-chat-left-text-fill"></i>
+            <span>Recent Reviews</span>
+            <span class="review-count" id="reviewCount"></span>
+          </div>
           <div id="reviewList"></div>
         </div>
       </div>
@@ -65,41 +79,130 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    function submitReview() {
-      const input   = document.getElementById('commentInput');
-      const ratingEl = document.querySelector('input[name="rating"]:checked');
-      const comment  = input.value.trim();
+    // ── PASTE YOUR GOOGLE APPS SCRIPT URL HERE ──────────────────
+    const SHEET_URL = 'https://script.google.com/macros/s/AKfycby4VXJoZPLL8o6bn9Nz5v1U_bQyj3KX0xZTjSME77oHRmdTMdGo8GIbAmSQ0Iz7irBXzQ/exec';
+    // ────────────────────────────────────────────────────────────
 
-      input.classList.remove('error');
+    const LABELS = ['','Terrible','Poor','Okay','Good','Excellent'];
+    let selectedRating = 0;
 
-      if (!comment) {
-        input.classList.add('error');
-        showToast('Please write a comment first.', 'error');
-        input.focus();
+    function selectStar(val) {
+      selectedRating = val;
+      document.querySelectorAll('.star-btn').forEach(btn => {
+        btn.classList.toggle('active', +btn.dataset.val <= val);
+      });
+      document.getElementById('ratingHint').textContent = LABELS[val] + ' — ' + val + '/5';
+      document.getElementById('ratingHint').className = 'rating-hint selected';
+    }
+
+    // Hover preview
+    document.querySelectorAll('.star-btn').forEach(btn => {
+      btn.addEventListener('mouseenter', () => {
+        const v = +btn.dataset.val;
+        document.querySelectorAll('.star-btn').forEach(b => {
+          b.classList.toggle('hover', +b.dataset.val <= v);
+        });
+        document.getElementById('ratingHint').textContent = LABELS[v];
+      });
+      btn.addEventListener('mouseleave', () => {
+        document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('hover'));
+        document.getElementById('ratingHint').textContent =
+          selectedRating ? LABELS[selectedRating] + ' — ' + selectedRating + '/5' : 'Tap a star to rate';
+      });
+    });
+
+    // ── Fetch reviews from Google Sheet ───────────────────────
+    async function loadReviews() {
+      const list = document.getElementById('reviewList');
+      list.innerHTML = `<div class="no-reviews"><span class="spinner" style="border-top-color:var(--primary);border-color:var(--border)"></span></div>`;
+      try {
+        const res  = await fetch(SHEET_URL + '?action=get');
+        const data = await res.json();
+        renderReviews(data.reviews || []);
+      } catch (err) {
+        console.warn('Failed to load reviews:', err);
+        renderReviews([]);
+      }
+    }
+
+    async function submitReview() {
+      const nameEl    = document.getElementById('nameInput');
+      const commentEl = document.getElementById('commentInput');
+      const name      = nameEl.value.trim();
+      const comment   = commentEl.value.trim();
+
+      nameEl.classList.remove('error');
+      commentEl.classList.remove('error');
+
+      if (!name) {
+        nameEl.classList.add('error');
+        showToast('Please enter your name.', 'error');
+        nameEl.focus();
         return;
       }
-      if (!ratingEl) {
+      if (!comment) {
+        commentEl.classList.add('error');
+        showToast('Please write a comment.', 'error');
+        commentEl.focus();
+        return;
+      }
+      if (!selectedRating) {
         showToast('Please select a star rating.', 'error');
         return;
       }
 
-      const reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
-      reviews.unshift({
-        comment, rating: +ratingEl.value,
-        user: localStorage.getItem('username') || 'Anonymous',
-        date: new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' })
-      });
-      localStorage.setItem('reviews', JSON.stringify(reviews.slice(0, 20)));
+      const date    = new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+      const payload = { name, comment, rating: selectedRating, date };
 
-      input.value = '';
-      ratingEl.checked = false;
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Submitting…';
+
+      try {
+        await fetch(SHEET_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch (err) {
+        console.warn('Sheet submit error:', err);
+      }
+
+      // Reset form
+      nameEl.value = '';
+      commentEl.value = '';
+      selectedRating = 0;
+      document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('ratingHint').textContent = 'Tap a star to rate';
+      document.getElementById('ratingHint').className = 'rating-hint';
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-send-fill"></i> Submit Review';
+
       showToast('Thank you! Your review has been published.', 'success');
-      renderReviews();
+
+      // Reload from sheet after short delay (sheet needs a moment to persist)
+      setTimeout(loadReviews, 1200);
     }
 
-    function renderReviews() {
-      const list = document.getElementById('reviewList');
-      const reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
+    function timeAgo(raw) {
+      // raw can be ISO string, locale string, or a date string
+      const d = new Date(raw);
+      if (isNaN(d)) return raw; // fallback if unparseable
+      const secs = Math.floor((Date.now() - d.getTime()) / 1000);
+      if (secs < 60)          return 'Just now';
+      if (secs < 3600)        return Math.floor(secs / 60) + ' min ago';
+      if (secs < 86400)       return Math.floor(secs / 3600) + ' hr ago';
+      if (secs < 86400 * 7)   return Math.floor(secs / 86400) + ' days ago';
+      if (secs < 86400 * 30)  return Math.floor(secs / 86400 / 7) + ' weeks ago';
+      if (secs < 86400 * 365) return Math.floor(secs / 86400 / 30) + ' months ago';
+      return Math.floor(secs / 86400 / 365) + ' years ago';
+    }
+
+    function renderReviews(reviews) {
+      const list    = document.getElementById('reviewList');
+      const countEl = document.getElementById('reviewCount');
+      countEl.textContent = reviews.length ? reviews.length : '';
 
       if (!reviews.length) {
         list.innerHTML = `<div class="no-reviews">
@@ -110,12 +213,22 @@
       }
 
       list.innerHTML = reviews.map(r => {
-        const filled = '★'.repeat(r.rating);
-        const empty  = '☆'.repeat(5 - r.rating);
+        // handles: 5, "5", "5/5", null, etc.
+        const rating  = Math.min(5, Math.max(0, Math.round(parseFloat(String(r.rating))) || 0));
+        const stars   = '★'.repeat(rating) + '☆'.repeat(5 - rating);
+        const name    = r.name || r.user || 'Anonymous';
+        const initial = esc(name).charAt(0).toUpperCase();
+        const when    = timeAgo(r.timestamp || r.date);
         return `<div class="review-item">
-          <div class="review-stars">${filled}${empty}</div>
-          <div class="review-comment">${esc(r.comment)}</div>
-          <div class="review-meta"><i class="bi bi-person-circle me-1"></i>${esc(r.user)} &middot; ${esc(r.date)}</div>
+          <div class="review-top">
+            <div class="reviewer-avatar">${initial}</div>
+            <div class="reviewer-info">
+              <div class="reviewer-name">${esc(name)}</div>
+              <div class="reviewer-date">${when}</div>
+            </div>
+            <div class="review-stars">${stars}</div>
+          </div>
+          <p class="review-comment">${esc(r.comment)}</p>
         </div>`;
       }).join('');
     }
@@ -135,7 +248,7 @@
       setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 420); }, 3400);
     }
 
-    renderReviews();
+    loadReviews();
   </script>
 </body>
 </html>

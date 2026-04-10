@@ -1,6 +1,6 @@
-# 360 Solution Provider — V1.0
+# 360 Solution Provider — V2.0
 
-A web platform designed to provide technical and educational solutions for engineering students. Built with pure HTML5, CSS3, and vanilla JavaScript — no frameworks, no build tools, no dependencies.
+A modern web platform connecting engineering students with professionals for technical and educational solutions. Built with HTML5, CSS3, vanilla JavaScript, and Bootstrap 5 — no build tools required.
 
 ---
 
@@ -12,7 +12,7 @@ A web platform designed to provide technical and educational solutions for engin
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
 - [Pages & Navigation](#pages--navigation)
-- [Login Credentials](#login-credentials)
+- [Google Sheets Integration](#google-sheets-integration)
 - [Team](#team)
 - [Architecture Notes](#architecture-notes)
 
@@ -20,20 +20,19 @@ A web platform designed to provide technical and educational solutions for engin
 
 ## Overview
 
-360 Solution Provider is a student-focused service platform connecting engineering students with professionals across computer science, mechanical, and educational domains. Users can browse service categories, submit queries, rate services, and manage their profiles.
+360 Solution Provider is a student-focused service platform that connects engineering students with professionals across Computer Science, Mechanical Engineering, and Education. Users can browse service categories, submit queries, write reviews, and explore the team — all without any backend server.
 
 ---
 
 ## Features
 
-- **Authentication** — Login/Signup modal with 6 pre-configured user accounts and localStorage session persistence
-- **User Profiles** — Dynamic profile pages showing user info, settings, and query history
-- **Service Categories** — Computer, Mechanical, and Educational services with query submission forms
-- **Reviews & Ratings** — Star-based rating system (1–5) with comment submission
-- **Settings Panel** — Notification toggle, location toggle, and dark mode
-- **About Us** — Team member profiles and descriptions
-- **Help Center** — Support search interface and contact information
-- **Responsive Design** — Mobile-friendly layout with hamburger menu (breakpoint: 700px)
+- **Service Categories** — Computer, Mechanical, and Educational services with query submission saved to Google Sheets
+- **Reviews** — Star rating system (1–5) with name and comment, fetched from and saved to Google Sheets in real time
+- **Help Center** — Live-search Bootstrap accordion FAQ + support contact cards
+- **About Us** — Founder spotlight and core team grid with hover animations
+- **Responsive Sidebar** — Collapsible on desktop, slide-in drawer on mobile with overlay backdrop
+- **Toast Notifications** — Slide-in feedback toasts for all user actions
+- **Favicon** — SVG favicon with violet gradient and "360" text
 
 ---
 
@@ -41,27 +40,38 @@ A web platform designed to provide technical and educational solutions for engin
 
 ```
 360-solution-provider-v1-project/
-├── index.html          # Main shell — sidebar, iframe container, login/signup modals
-├── home.html           # Landing page — welcome message, ratings, intro
-├── profile.html        # User dashboard — profile info, settings, query history
-├── category.html       # Service categories — Computer, Mechanical, Educational
-├── review.html         # Feedback page — star rating and comment form
-├── aboutus.html        # Team profiles and descriptions
-├── help.html           # Support center and help search
-├── style.css           # External stylesheet (used by index.html)
-├── javascript.js       # Core JavaScript — auth, navigation, dark mode, profile logic
-├── assest/             # Images — logo, avatars, category icons, backgrounds
-│   ├── logo.png
-│   ├── vikas.JPG
-│   ├── tarun.jpeg
-│   ├── aman.jpg
-│   ├── animesh.jpeg
-│   ├── astha.jpg
-│   └── (background images 1.jpg – 7.jpg, back.jpg, cat1–3.png)
-└── dist/               # Pre-built distribution files
-    ├── javascript.min.js
-    ├── javascript.dev.js
-    └── (source maps and HTML copies)
+├── index.html              # Shell — topbar, sidebar, iframe, toast container
+├── favicon.svg             # SVG favicon
+├── README.md
+│
+├── pages/
+│   ├── home.html           # Hero, animated stats, services, testimonials, footer
+│   ├── category.html       # Service pills + query modal (saves to Google Sheets)
+│   ├── review.html         # Star rating form + review list (Google Sheets)
+│   ├── about-us.html       # Founder spotlight + team grid
+│   └── help.html           # FAQ accordion with live search
+│
+└── assest/
+    ├── images/             # All images — logos, avatars, category icons
+    │   ├── logo.png
+    │   ├── vikas.JPG
+    │   ├── aman.jpg
+    │   ├── tarun.jpeg
+    │   ├── animesh.jpeg
+    │   ├── astha.jpg
+    │   ├── avtar.jpeg
+    │   ├── back.jpg
+    │   ├── cat1.png – cat3.png
+    │   └── 1.jpg – 7.jpg
+    ├── css/
+    │   ├── index.css       # Shell styles — topbar, sidebar, overlay, toasts
+    │   ├── home.css        # Home page — hero, stats, services, footer
+    │   ├── category.css    # Categories — service pills, query modal
+    │   ├── review.css      # Reviews — star buttons, review cards
+    │   ├── about-us.css    # About — founder card, team grid
+    │   └── help.css        # Help — banner, search, FAQ accordion
+    └── js/
+        └── index.js        # Navigation, sidebar toggle, toast system
 ```
 
 ---
@@ -71,11 +81,11 @@ A web platform designed to provide technical and educational solutions for engin
 | Layer | Technology |
 |-------|------------|
 | Markup | HTML5 |
-| Styling | CSS3 (Flexbox, Gradients, Animations, Media Queries) |
-| Scripting | Vanilla JavaScript (ES5) |
-| Icons | Font Awesome 4.7.0 (CDN) |
-| Storage | localStorage API |
-| Dev Server | VS Code Live Server (port 5501) |
+| Styling | CSS3 + Bootstrap 5.3.3 |
+| Icons | Bootstrap Icons 1.11.3 |
+| Typography | Google Fonts — Inter (400–800) |
+| Scripting | Vanilla JavaScript (ES2017) |
+| Storage | Google Sheets (via Apps Script Web App) |
 | Version Control | Git / GitHub |
 
 ---
@@ -89,7 +99,6 @@ No installation or build step required.
 1. Open the project folder in VS Code
 2. Install the [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) extension
 3. Right-click `index.html` → **Open with Live Server**
-4. App runs at `http://localhost:5501`
 
 ### Option 2 — Python HTTP Server
 
@@ -107,31 +116,68 @@ Open `index.html` directly in any modern browser.
 
 ## Pages & Navigation
 
-The app uses an **iframe-based architecture** — `index.html` acts as the persistent shell and loads content pages into an embedded `<iframe id="frame1">`. The sidebar stays fixed while content changes.
+The app uses an **iframe-based architecture** — `index.html` is the persistent shell and loads content pages into `<iframe id="frame1">`. The sidebar and topbar stay fixed while only the content changes.
 
-| Page | Route | Description |
-|------|-------|-------------|
-| Home | `home.html` | Welcome screen, feature overview, ratings |
-| Profile | `profile.html` | User info, settings toggles, query history |
-| Category | `category.html` | Browse and submit service queries |
-| Review | `review.html` | Rate and review the service |
-| About Us | `aboutus.html` | Team member profiles |
-| Help | `help.html` | Help center and support contact |
+| Page | File | Description |
+|------|------|-------------|
+| Home | `pages/home.html` | Hero, animated stats, service cards, testimonials, footer |
+| Categories | `pages/category.html` | Browse services, submit queries to Google Sheets |
+| Reviews | `pages/review.html` | Write reviews and view all reviews from Google Sheets |
+| About Us | `pages/about-us.html` | Founder spotlight and core team profiles |
+| Help | `pages/help.html` | Live-search FAQ accordion and support contact |
 
 ---
 
-## Login Credentials
+## Google Sheets Integration
 
-> These credentials are hard-coded for demo purposes only. Do not use in production.
+Reviews and queries are stored in a Google Sheet via a Google Apps Script Web App deployed as a public endpoint.
 
-| Username | Password | Role |
-|----------|----------|------|
-| vikas gola | 24111999 | Founder |
-| tarun gupta | 10112000 | Co-Founder / Design Manager |
-| aman shakya | 18032001 | Co-Founder & CTO |
-| taruwarsh kumar | 07082000 | Senior Developer |
-| animesh dixit | 09062001 | Senior Graphic Designer |
-| astha verma | 17112000 | Social Media Manager |
+### Setup
+
+1. Create a Google Sheet with two tabs named **`Reviews`** and **`Queries`**
+2. Add headers:
+   - **Reviews:** `Timestamp | Name | Rating | Comment | Date`
+   - **Queries:** `Timestamp | Service | Email | Message | Date`
+3. Go to **Extensions → Apps Script**, paste the script below, and deploy as a Web App (Execute as: Me, Access: Anyone)
+4. Copy the Web App URL and replace `YOUR_APPS_SCRIPT_URL_HERE` in:
+   - `pages/review.html` — `const SHEET_URL = '...'`
+   - `pages/category.html` — `const SHEET_URL = '...'`
+
+### Apps Script
+
+```javascript
+function doGet(e) {
+  const sheet   = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Reviews');
+  const rows    = sheet.getDataRange().getValues();
+  const reviews = rows.slice(1).reverse().map(row => ({
+    timestamp: row[0],
+    name:      row[1],
+    rating:    parseInt(String(row[2])) || 0,
+    comment:   row[3],
+    date:      row[4]
+  }));
+  return ContentService
+    .createTextOutput(JSON.stringify({ reviews }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  const ss   = SpreadsheetApp.getActiveSpreadsheet();
+  const data = JSON.parse(e.postData.contents);
+  if (data.type === 'query') {
+    ss.getSheetByName('Queries').appendRow([
+      new Date().toLocaleString('en-IN'), data.service, data.email, data.message, data.date
+    ]);
+  } else {
+    ss.getSheetByName('Reviews').appendRow([
+      new Date().toLocaleString('en-IN'), data.name, data.rating, data.comment, data.date
+    ]);
+  }
+  return ContentService
+    .createTextOutput(JSON.stringify({ status: 'ok' }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+```
 
 ---
 
@@ -140,27 +186,29 @@ The app uses an **iframe-based architecture** — `index.html` acts as the persi
 | Name | Role |
 |------|------|
 | Vikas Gola | Founder |
+| Aman Shakya | Co-Founder & CTO |
 | Tarun Gupta | Co-Founder, Design Manager |
-| Aman Shakya | Co-Founder, CTO |
 | Taruwarsh Kumar | Senior Developer |
 | Animesh Dixit | Senior Graphic Designer |
 | Astha Verma | Social Media Manager |
+| Nazia Fareen | Content Head |
 
 ---
 
 ## Architecture Notes
 
-- **Iframe navigation** — Content pages load into a central iframe; no client-side router used.
-- **CSS checkbox hack** — Hamburger menu toggled via hidden `<input type="checkbox">` and CSS sibling selectors.
-- **Dark mode** — Implemented by toggling CSS variables/classes via JavaScript; state is not persisted across sessions.
-- **No backend** — All data (users, team info, service categories) is hard-coded. There is no database, API, or server-side logic.
-- **dist/ folder** — Contains minified production output with source maps, ready for static hosting (GitHub Pages, Netlify, Vercel).
+- **Iframe navigation** — Content pages load into a central iframe; `navigate(page)` in `index.js` sets the `src` and updates the active nav link.
+- **Sidebar** — CSS `transform: translateX` driven by `body.sidebar-open` (mobile) and `body.sidebar-collapsed` (desktop). Overlay backdrop on mobile.
+- **No authentication** — Login and profile features were removed. The platform is fully public.
+- **Google Sheets as database** — `fetch()` with `mode: no-cors` for POST (fire-and-forget), standard GET for reading reviews.
+- **Relative timestamps** — Review dates use a `timeAgo()` helper (Just now / 2 hr ago / 3 days ago).
+- **No build step** — All assets are served as-is. Deploy the project root to any static host.
 
 ---
 
 ## Deployment
 
-This is a fully static site. Deploy the project root (or the `dist/` folder for minified output) to any static hosting service:
+Deploy the project root to any static hosting service:
 
 - [GitHub Pages](https://pages.github.com/)
 - [Netlify](https://netlify.com/)

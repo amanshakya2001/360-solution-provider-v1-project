@@ -36,20 +36,6 @@
         <span class="brand-name">360 Solution Provider</span>
       </a>
     </div>
-
-    <div class="topbar-right">
-      <!-- User info (shown after login) -->
-      <div class="topbar-user" id="topbarUser" style="display:none">
-        <img src="assest/images/avtar.jpeg" id="topbarAvatar" alt="avatar" class="user-avatar">
-        <span class="user-name d-none d-sm-inline" id="topbarName"></span>
-      </div>
-
-      <!-- Auth button -->
-      <button class="btn-auth" id="authBtn" onclick="handleAuthBtn()">
-        <i class="bi bi-box-arrow-in-right"></i>
-        <span>Login</span>
-      </button>
-    </div>
   </nav>
 
   <!-- ════════════════ SIDEBAR OVERLAY ════════════════ -->
@@ -65,12 +51,6 @@
             <i class="bi bi-house-door-fill"></i><span>Home</span>
           </a>
         </li>
-        <li id="profileNavItem" style="display:none">
-          <a href="#" class="nav-link" data-page="pages/profile.html"
-             onclick="navigate(this.dataset.page); return false;">
-            <i class="bi bi-person-circle"></i><span>Profile</span>
-          </a>
-        </li>
         <li>
           <a href="#" class="nav-link" data-page="pages/category.html"
              onclick="navigate(this.dataset.page); return false;">
@@ -84,7 +64,7 @@
           </a>
         </li>
         <li>
-          <a href="#" class="nav-link" data-page="pages/aboutus.html"
+          <a href="#" class="nav-link" data-page="pages/about-us.html"
              onclick="navigate(this.dataset.page); return false;">
             <i class="bi bi-people-fill"></i><span>About Us</span>
           </a>
@@ -117,106 +97,6 @@
     <iframe src="pages/home.html" id="frame1" name="frame1" title="Page content"
             onload="onFrameLoad(this)"></iframe>
   </main>
-
-  <!-- ════════════════ LOGIN MODAL ════════════════ -->
-  <div class="modal fade auth-modal" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <div class="auth-brand">
-            <img src="favicon.svg" alt="Logo">
-            <h5 id="loginModalLabel">Sign in to 360 SP</h5>
-          </div>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form id="loginForm" onsubmit="submitLogin(event)" novalidate>
-            <div class="mb-3">
-              <label class="form-label" for="loginUsername">Username</label>
-              <input type="text" class="form-control" id="loginUsername"
-                     placeholder="Enter your username" autocomplete="username">
-              <div class="invalid-feedback" id="usernameError"></div>
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="loginPassword">Password</label>
-              <input type="password" class="form-control" id="loginPassword"
-                     placeholder="Enter your password" autocomplete="current-password">
-              <div class="invalid-feedback" id="passwordError"></div>
-            </div>
-            <div class="d-grid mt-4">
-              <button type="submit" class="btn-submit">
-                <i class="bi bi-box-arrow-in-right"></i> Sign In
-              </button>
-            </div>
-          </form>
-
-          <div class="auth-divider"><span>or continue with</span></div>
-
-          <div class="d-flex gap-3 mb-3">
-            <button class="btn btn-outline-secondary social-btn flex-fill">
-              <i class="bi bi-google me-2"></i>Google
-            </button>
-            <button class="btn btn-outline-secondary social-btn flex-fill">
-              <i class="bi bi-facebook me-2"></i>Facebook
-            </button>
-          </div>
-
-          <p class="auth-switch mt-3">
-            Don't have an account?
-            <a href="#" onclick="switchToSignup(); return false;">Sign up free</a>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ════════════════ SIGNUP MODAL ════════════════ -->
-  <div class="modal fade auth-modal" id="signupModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <div class="auth-brand">
-            <img src="favicon.svg" alt="Logo">
-            <h5>Create your account</h5>
-          </div>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form onsubmit="return false;" novalidate>
-            <div class="mb-3">
-              <label class="form-label" for="signupEmail">Email</label>
-              <input type="email" class="form-control" id="signupEmail"
-                     placeholder="your@email.com" autocomplete="email">
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="signupUsername">Username</label>
-              <input type="text" class="form-control" id="signupUsername"
-                     placeholder="Choose a username">
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="signupPassword">Password</label>
-              <input type="password" class="form-control" id="signupPassword"
-                     placeholder="Create a strong password">
-            </div>
-            <div class="mb-3">
-              <label class="form-label" for="signupConfirm">Confirm Password</label>
-              <input type="password" class="form-control" id="signupConfirm"
-                     placeholder="Repeat password">
-            </div>
-            <div class="d-grid mt-4">
-              <button type="button" class="btn-submit">
-                <i class="bi bi-person-check-fill"></i> Create Account
-              </button>
-            </div>
-          </form>
-          <p class="auth-switch mt-3">
-            Already have an account?
-            <a href="#" onclick="switchToLogin(); return false;">Sign in</a>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Toast container -->
   <div id="toast-container"></div>

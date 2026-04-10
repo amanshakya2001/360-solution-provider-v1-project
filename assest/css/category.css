@@ -87,14 +87,38 @@ body { font-family: var(--font); background: var(--bg); color: var(--text-1); pa
 }
 .query-modal .form-control.is-invalid { border-color: #f87171; }
 
-.btn-submit-query {
-  background: var(--primary); color: #fff; border: none;
-  border-radius: 10px; padding: 12px 28px; font-weight: 600; font-size: 15px;
-  cursor: pointer; font-family: var(--font);
-  transition: background .2s, transform .1s;
-  display: flex; align-items: center; gap: 8px;
+.query-spinner {
+  display: inline-block; width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,.35);
+  border-top-color: #fff; border-radius: 50%;
+  animation: qspin .65s linear infinite;
 }
-.btn-submit-query:hover { background: var(--primary-dark); transform: translateY(-1px); }
+@keyframes qspin { to { transform: rotate(360deg); } }
+.btn-modal-submit:disabled { opacity: .7; cursor: not-allowed; }
+
+.btn-modal-cancel,
+.btn-modal-submit {
+  height: 44px; padding: 0 22px; border-radius: 10px;
+  font-size: 14px; font-weight: 600; font-family: var(--font);
+  cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+  transition: background .2s, border-color .2s, transform .1s, box-shadow .2s;
+}
+.btn-modal-cancel {
+  background: transparent; color: var(--text-2);
+  border: 1.5px solid var(--border);
+}
+.btn-modal-cancel:hover {
+  background: var(--bg); border-color: #94a3b8; color: var(--text-1);
+}
+.btn-modal-submit {
+  background: var(--primary); color: #fff; border: none;
+  box-shadow: 0 4px 14px rgba(124,58,237,.35);
+}
+.btn-modal-submit:hover {
+  background: var(--primary-dark); transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(124,58,237,.45);
+}
+.btn-modal-submit:active { transform: translateY(0); }
 
 /* ── Toast ────────────────────────────────────────── */
 #toast-container {

@@ -1,6 +1,6 @@
 /* ============================================================
    360 Solution Provider — Shell Styles (index.css)
-   Covers: topbar, sidebar, main content frame, auth modals, toasts
+   Covers: topbar, sidebar, main content frame, toasts
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -19,7 +19,6 @@
   --text-2:        #64748b;
   --border:        #e2e8f0;
   --shadow-sm:     0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
-  --shadow-md:     0 4px 12px rgba(0,0,0,.10);
   --radius:        10px;
   --font:          'Inter', system-ui, sans-serif;
   --transition:    0.28s cubic-bezier(.4,0,.2,1);
@@ -31,17 +30,16 @@ html, body { height: 100%; font-family: var(--font); background: var(--bg); }
 
 /* ── Topbar ─────────────────────────────────────────────────── */
 .topbar {
-  position: fixed; top: 0; left: 0; right: 0;
+  position: sticky; top: 0; left: 0; right: 0;
   height: var(--topbar-h);
   background: var(--topbar-bg);
   border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center;
   padding: 0 20px;
   z-index: 1000;
   box-shadow: var(--shadow-sm);
 }
-.topbar-left  { display: flex; align-items: center; gap: 12px; }
-.topbar-right { display: flex; align-items: center; gap: 12px; }
+.topbar-left { display: flex; align-items: center; gap: 12px; }
 
 .menu-toggle {
   background: none; border: none; padding: 7px; border-radius: 8px;
@@ -60,24 +58,6 @@ html, body { height: 100%; font-family: var(--font); background: var(--bg); }
   font-size: 16px; font-weight: 700; color: var(--text-1); white-space: nowrap;
 }
 
-.topbar-user { display: flex; align-items: center; gap: 9px; }
-.user-avatar {
-  width: 32px; height: 32px; border-radius: 50%; object-fit: cover;
-  border: 2px solid var(--primary);
-}
-.user-name { font-size: 14px; font-weight: 600; color: var(--text-1); }
-
-.btn-auth {
-  display: flex; align-items: center; gap: 6px;
-  padding: 8px 18px; background: var(--primary);
-  color: #fff; border: none; border-radius: 8px;
-  font-size: 14px; font-weight: 600; cursor: pointer;
-  font-family: var(--font);
-  transition: background var(--transition), transform .1s;
-}
-.btn-auth:hover { background: var(--primary-dark); transform: translateY(-1px); }
-.btn-auth:active { transform: translateY(0); }
-
 /* ── Sidebar ─────────────────────────────────────────────────── */
 .sidebar {
   position: fixed;
@@ -91,10 +71,13 @@ html, body { height: 100%; font-family: var(--font); background: var(--bg); }
   transition: transform var(--transition);
   z-index: 900; overflow-y: auto;
 }
-/* Always visible on lg screens */
 @media (min-width: 1024px) {
   .sidebar { transform: translateX(0); }
+  /* Desktop: hamburger collapses sidebar */
+  body.sidebar-collapsed .sidebar { transform: translateX(-100%); }
+  body.sidebar-collapsed .main-content { margin-left: 0; }
 }
+/* Mobile: hamburger opens sidebar */
 body.sidebar-open .sidebar { transform: translateX(0); }
 
 .sidebar-nav { flex: 1; padding: 14px 10px; }
@@ -159,7 +142,6 @@ body.sidebar-open .sidebar-overlay { display: block; }
 
 /* ── Main content ───────────────────────────────────────────── */
 .main-content {
-  margin-top: var(--topbar-h);
   height: calc(100vh - var(--topbar-h));
   transition: margin-left var(--transition);
 }
@@ -172,89 +154,6 @@ body.sidebar-open .sidebar-overlay { display: block; }
   opacity: 0; transition: opacity .3s ease;
 }
 #frame1.loaded { opacity: 1; }
-
-/* ── Auth Modal ─────────────────────────────────────────────── */
-.auth-modal .modal-content {
-  background: #18181b;
-  border: 1px solid rgba(255,255,255,.1);
-  border-radius: 18px; color: #fff;
-  box-shadow: 0 25px 60px rgba(0,0,0,.5);
-}
-.auth-modal .modal-header { padding: 24px 24px 0; border: none; }
-.auth-modal .modal-body   { padding: 18px 24px 28px; }
-
-.auth-brand { display: flex; align-items: center; gap: 12px; }
-.auth-brand img { width: 38px; height: 38px; border-radius: 10px; }
-.auth-brand h5 { margin: 0; font-weight: 700; font-size: 17px; color: #fff; }
-
-.auth-modal .form-label {
-  color: rgba(255,255,255,.65); font-size: 12px;
-  font-weight: 600; letter-spacing: .5px; text-transform: uppercase;
-  margin-bottom: 6px;
-}
-.auth-modal .form-control {
-  background: rgba(255,255,255,.07);
-  border: 1.5px solid rgba(255,255,255,.12);
-  color: #fff; border-radius: 10px;
-  padding: 11px 14px; font-size: 14px;
-  transition: border-color var(--transition), box-shadow var(--transition);
-  font-family: var(--font);
-}
-.auth-modal .form-control:focus {
-  background: rgba(255,255,255,.1);
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(124,58,237,.25); color: #fff;
-}
-.auth-modal .form-control::placeholder { color: rgba(255,255,255,.28); }
-.auth-modal .form-control.is-invalid  { border-color: #f87171; }
-.auth-modal .invalid-feedback { color: #fca5a5; font-size: 12px; }
-
-.btn-submit {
-  width: 100%; padding: 12px; background: var(--primary);
-  color: #fff; border: none; border-radius: 10px;
-  font-size: 15px; font-weight: 600; cursor: pointer;
-  font-family: var(--font);
-  transition: background var(--transition), transform .1s;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-.btn-submit:hover  { background: var(--primary-dark); transform: translateY(-1px); }
-.btn-submit:active { transform: translateY(0); }
-
-.auth-divider {
-  text-align: center; margin: 20px 0; position: relative;
-  color: rgba(255,255,255,.3); font-size: 12px;
-}
-.auth-divider::before, .auth-divider::after {
-  content: ''; position: absolute; top: 50%;
-  width: 42%; height: 1px; background: rgba(255,255,255,.1);
-}
-.auth-divider::before { left: 0; }
-.auth-divider::after  { right: 0; }
-
-.social-btn {
-  border-color: rgba(255,255,255,.15) !important;
-  color: rgba(255,255,255,.75) !important;
-  font-size: 13px; border-radius: 9px;
-  transition: all var(--transition) !important;
-}
-.social-btn:hover {
-  background: rgba(255,255,255,.07) !important;
-  border-color: rgba(255,255,255,.3) !important;
-  color: #fff !important;
-}
-.auth-switch { color: rgba(255,255,255,.5); font-size: 13px; text-align: center; }
-.auth-switch a { color: #a78bfa !important; font-weight: 600; text-decoration: none; }
-.auth-switch a:hover { color: #c4b5fd !important; }
-
-/* Shake animation */
-@keyframes shake {
-  0%,100% { transform: translateX(0); }
-  20% { transform: translateX(-9px); }
-  40% { transform: translateX(9px); }
-  60% { transform: translateX(-6px); }
-  80% { transform: translateX(6px); }
-}
-.shake { animation: shake .45s ease-in-out; }
 
 /* ── Toast System ───────────────────────────────────────────── */
 #toast-container {

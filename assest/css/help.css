@@ -45,6 +45,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text-1); pa
   border-radius: var(--radius); padding: 24px 18px; text-align: center;
   box-shadow: 0 2px 8px rgba(0,0,0,.06);
   transition: transform .2s, box-shadow .2s;
+  height: 100%;
 }
 .support-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(0,0,0,.1); }
 .support-icon {
