@@ -1,0 +1,146 @@
+/* ── Shared vars ─────────────────────────────────── */
+:root {
+  --primary:      #7c3aed;
+  --primary-dark: #6d28d9;
+  --primary-tint: rgba(124,58,237,.08);
+  --bg:           #f8fafc;
+  --card:         #ffffff;
+  --text-1:       #0f172a;
+  --text-2:       #64748b;
+  --border:       #e2e8f0;
+  --radius:       14px;
+  --shadow:       0 2px 8px rgba(0,0,0,.07);
+  --font:         'Inter', system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font); background: var(--bg); color: var(--text-1); }
+
+/* ── Hero ─────────────────────────────────────────── */
+.hero-section {
+  background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 50%, #e879f9 100%);
+  padding: 70px 0 60px;
+  color: #fff;
+}
+.badge-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.3);
+  color: #fff; padding: 5px 14px; border-radius: 20px;
+  font-size: 12px; font-weight: 600; letter-spacing: .4px; margin-bottom: 20px;
+}
+.hero-title {
+  font-size: clamp(28px, 5vw, 48px); font-weight: 800;
+  line-height: 1.15; margin-bottom: 18px;
+}
+.gradient-text {
+  background: linear-gradient(90deg, #fde68a, #fbbf24);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero-subtitle {
+  font-size: 16px; opacity: .85; max-width: 500px; line-height: 1.65; margin-bottom: 32px;
+}
+.hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+
+.btn-hero-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 28px; background: #fff; color: var(--primary);
+  border-radius: 10px; font-weight: 700; font-size: 15px; text-decoration: none;
+  transition: box-shadow .2s, transform .1s;
+  box-shadow: 0 4px 15px rgba(0,0,0,.15);
+}
+.btn-hero-primary:hover { box-shadow: 0 6px 24px rgba(0,0,0,.2); transform: translateY(-2px); color: var(--primary-dark); }
+
+.btn-hero-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 28px; background: rgba(255,255,255,.15);
+  border: 1.5px solid rgba(255,255,255,.4); color: #fff;
+  border-radius: 10px; font-weight: 600; font-size: 15px; text-decoration: none;
+  transition: background .2s;
+}
+.btn-hero-ghost:hover { background: rgba(255,255,255,.25); color: #fff; }
+
+.hero-visual {
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 20px; padding: 30px 24px; text-align: center;
+  backdrop-filter: blur(10px);
+}
+.hero-hindi {
+  font-size: clamp(16px, 2.5vw, 24px); font-weight: 700; color: #fff;
+  line-height: 1.5;
+}
+.hero-en { font-size: 14px; color: rgba(255,255,255,.7); margin-top: 8px; }
+
+/* ── Stats bar ─────────────────────────────────────── */
+.stats-section { padding: 40px 0; background: var(--bg); }
+.stat-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px 20px; text-align: center;
+  box-shadow: var(--shadow); transition: transform .2s, box-shadow .2s;
+}
+.stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.1); }
+.stat-value {
+  font-size: clamp(28px, 4vw, 38px); font-weight: 800; color: var(--primary);
+  line-height: 1;
+}
+.stat-value .star { color: #f59e0b; font-size: 0.75em; }
+.stat-label { font-size: 13px; color: var(--text-2); margin-top: 6px; font-weight: 500; }
+
+/* ── Services section ──────────────────────────────── */
+.services-section { padding: 60px 0; background: #f1f5f9; }
+.section-header { text-align: center; margin-bottom: 40px; }
+.section-title { font-size: clamp(22px, 3.5vw, 32px); font-weight: 800; color: var(--text-1); margin-bottom: 10px; }
+.section-sub   { font-size: 15px; color: var(--text-2); }
+
+.service-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px 24px; height: 100%;
+  box-shadow: var(--shadow); transition: transform .2s, box-shadow .2s;
+}
+.service-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,.1); }
+
+.service-icon {
+  width: 54px; height: 54px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; margin-bottom: 18px;
+}
+.service-icon.cs   { background: #ede9fe; color: #7c3aed; }
+.service-icon.mech { background: #fef3c7; color: #d97706; }
+.service-icon.edu  { background: #d1fae5; color: #059669; }
+
+.service-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 10px; color: var(--text-1); }
+.service-card p  { font-size: 14px; color: var(--text-2); line-height: 1.65; margin-bottom: 16px; }
+
+.service-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.service-tags span {
+  background: var(--primary-tint); color: var(--primary);
+  font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px;
+}
+
+/* ── About + Testimonials ──────────────────────────── */
+.about-section { padding: 60px 0; background: var(--bg); }
+
+.about-quote {
+  background: var(--card); border: 1px solid var(--border);
+  border-left: 4px solid var(--primary); border-radius: var(--radius);
+  padding: 24px 22px; margin-bottom: 22px;
+  box-shadow: var(--shadow);
+}
+.quote-icon { font-size: 28px; color: var(--primary); margin-bottom: 10px; display: block; }
+blockquote { font-size: 16px; color: var(--text-1); line-height: 1.7; font-style: italic; margin: 0; }
+
+.about-text { font-size: 14px; color: var(--text-2); line-height: 1.75; }
+
+.testimonial-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px 22px; margin-bottom: 14px;
+  box-shadow: var(--shadow);
+}
+.stars    { color: #f59e0b; font-size: 15px; margin-bottom: 8px; }
+.testimonial-card p { font-size: 14px; color: var(--text-2); font-style: italic; margin-bottom: 10px; }
+.reviewer { font-size: 12px; color: var(--text-2); font-weight: 600; }
+
+/* ── Footer ────────────────────────────────────────── */
+.page-footer {
+  background: #1e293b; color: rgba(255,255,255,.5);
+  text-align: center; font-size: 13px; padding: 22px 20px;
+}

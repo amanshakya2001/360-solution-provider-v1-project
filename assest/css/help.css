@@ -1,0 +1,89 @@
+:root {
+  --primary:      #7c3aed;
+  --primary-dark: #6d28d9;
+  --primary-tint: rgba(124,58,237,.08);
+  --bg:           #f8fafc;
+  --card:         #ffffff;
+  --text-1:       #0f172a;
+  --text-2:       #64748b;
+  --border:       #e2e8f0;
+  --radius:       14px;
+  --font:         'Inter', system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font); background: var(--bg); color: var(--text-1); padding-bottom: 50px; }
+
+/* ── Banner ───────────────────────────────────────── */
+.help-banner {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  padding: 52px 20px; text-align: center; color: #fff;
+}
+.help-banner h1 { font-size: clamp(22px, 4vw, 34px); font-weight: 800; margin-bottom: 10px; }
+.help-banner p  { color: rgba(255,255,255,.75); font-size: 15px; margin-bottom: 28px; }
+
+.search-wrap {
+  display: flex; max-width: 520px; margin: 0 auto;
+  border-radius: 12px; overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
+}
+.search-wrap input {
+  flex: 1; padding: 15px 20px; border: none; outline: none;
+  font-size: 15px; font-family: var(--font); color: var(--text-1);
+}
+.search-wrap button {
+  padding: 15px 24px; background: var(--primary); color: #fff;
+  border: none; font-size: 14px; font-weight: 600; cursor: pointer;
+  font-family: var(--font); transition: background .2s; white-space: nowrap;
+  display: flex; align-items: center; gap: 7px;
+}
+.search-wrap button:hover { background: var(--primary-dark); }
+
+/* ── Support cards ────────────────────────────────── */
+.support-section { padding: 36px 20px; max-width: 700px; margin: 0 auto; }
+.support-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px 18px; text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  transition: transform .2s, box-shadow .2s;
+}
+.support-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(0,0,0,.1); }
+.support-icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; margin: 0 auto 12px;
+}
+.icon-info    { background: #dcfce7; color: #16a34a; }
+.icon-faq     { background: #dbeafe; color: #2563eb; }
+.icon-contact { background: #ffedd5; color: #ea580c; }
+.support-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.support-card p  { font-size: 12px; color: var(--text-2); }
+
+/* ── FAQ section ──────────────────────────────────── */
+.faq-section { max-width: 700px; margin: 0 auto; padding: 0 20px 40px; }
+.faq-title { font-size: 20px; font-weight: 800; margin-bottom: 18px; }
+
+#no-results {
+  display: none; text-align: center; color: var(--text-2);
+  padding: 32px 0; font-size: 14px;
+}
+#no-results i { font-size: 36px; display: block; margin-bottom: 10px; color: #cbd5e1; }
+
+/* Bootstrap accordion overrides */
+.accordion-item {
+  border: 1px solid var(--border) !important; border-radius: var(--radius) !important;
+  margin-bottom: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.05);
+}
+.accordion-button {
+  font-size: 14px !important; font-weight: 600 !important; color: var(--text-1) !important;
+  background: var(--card) !important; padding: 17px 20px !important;
+  font-family: var(--font) !important;
+}
+.accordion-button:not(.collapsed) {
+  color: var(--primary) !important; background: var(--primary-tint) !important;
+  box-shadow: none !important;
+}
+.accordion-button::after {
+  filter: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%237c3aed'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E") !important;
+}
+.accordion-body { font-size: 14px; color: var(--text-2); line-height: 1.7; padding: 16px 20px !important; }

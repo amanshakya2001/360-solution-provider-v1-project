@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile — 360 Solution Provider</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../assest/css/profile.css">
+</head>
+<body id="pageBody">
+<div class="page-wrapper">
+
+  <!-- ── Avatar header ─────────────────────────────────────── -->
+  <div class="card-panel">
+    <div class="profile-header">
+      <div class="avatar-wrap">
+        <img src="../assest/images/avtar.jpeg" id="profileImg" alt="Avatar" class="avatar-img">
+      </div>
+      <h2 class="profile-name" id="profileName">—</h2>
+      <span class="role-badge" id="profileRole">Member</span>
+    </div>
+  </div>
+
+  <!-- ── Account info ───────────────────────────────────────── -->
+  <div class="card-panel">
+    <div class="section-title">Account Info</div>
+    <div class="divider"></div>
+    <div class="info-row">
+      <span class="info-label"><i class="bi bi-envelope"></i> Email</span>
+      <span class="info-value" id="profileEmail">—</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label"><i class="bi bi-phone"></i> Phone</span>
+      <span class="info-value" id="profilePhone">—</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label"><i class="bi bi-geo-alt"></i> Location</span>
+      <span class="info-value" id="profileLocation">GLA University, Mathura</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label"><i class="bi bi-calendar3"></i> Joined</span>
+      <span class="info-value" id="profileJoined">—</span>
+    </div>
+  </div>
+
+  <!-- ── Query history ──────────────────────────────────────── -->
+  <div class="card-panel">
+    <div class="section-title">Query History</div>
+    <div class="divider"></div>
+    <div class="query-box" id="queryHistory">No recent queries.</div>
+  </div>
+
+  <!-- ── Settings ───────────────────────────────────────────── -->
+  <div class="card-panel">
+    <div class="section-title">Settings</div>
+    <div class="divider"></div>
+
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-label">Notifications</div>
+        <div class="toggle-sub">Receive updates and service alerts</div>
+      </div>
+      <label class="ios-toggle">
+        <input type="checkbox" id="notiToggle" onchange="savePref('noti', this.checked)">
+        <span class="ios-slider"></span>
+      </label>
+    </div>
+
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-label">Location Services</div>
+        <div class="toggle-sub">Share location for personalised service</div>
+      </div>
+      <label class="ios-toggle">
+        <input type="checkbox" id="locToggle" onchange="savePref('loc', this.checked)">
+        <span class="ios-slider"></span>
+      </label>
+    </div>
+
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-label">Dark Mode</div>
+        <div class="toggle-sub">Switch to a dark colour theme</div>
+      </div>
+      <label class="ios-toggle">
+        <input type="checkbox" id="darkToggle" onchange="toggleDark(this.checked)">
+        <span class="ios-slider"></span>
+      </label>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const DATA = {
+    'vikas gola':      { name:'Vikas Gola',      role:'Founder',                 img:'../assest/images/vikas.JPG',    email:'vikas.gola_me19@gla.ac.in',      phone:'9897643759',  joined:'25 July 2016',   query:'3D modelling dimensioning' },
+    'tarun gupta':     { name:'Tarun Gupta',     role:'Co-Founder, Design Mgr',  img:'../assest/images/tarun.jpeg',   email:'tarun.gupta_cs19@gla.ac.in',     phone:'8077688011',  joined:'16 March 2020',  query:'Want to know about Thingworx' },
+    'aman shakya':     { name:'Aman Shakya',     role:'Co-Founder & CTO',        img:'../assest/images/aman.jpg',     email:'aman.shakya_cs19@gla.ac.in',     phone:'7017691164',  joined:'18 June 2012',   query:'Want to make an Android App for college' },
+    'taruwarsh kumar': { name:'Taruwarsh Kumar', role:'Senior Developer',        img:'',                              email:'taruwarsh.kumar_cs19@gla.ac.in', phone:'9369575630',  joined:'10 Nov 2015',    query:'Want to make a Graphic Design' },
+    'animesh dixit':   { name:'Animesh Dixit',   role:'Sr. Graphic Designer',    img:'../assest/images/animesh.jpeg', email:'animesh.dixit_cs19@gla.ac.in',   phone:'7309479007',  joined:'20 Oct 2021',    query:'Looking for 3D animation tools' },
+    'astha verma':     { name:'Astha Verma',     role:'Social Media Manager',    img:'../assest/images/astha.jpg',    email:'astha.verma_cs19@gla.ac.in',     phone:'**********', joined:'18 March 2015',  query:'Want to make a House Design' },
+  };
+
+  function init() {
+    const u = localStorage.getItem('username') || '';
+    const d = DATA[u];
+    if (d) {
+      if (d.img) document.getElementById('profileImg').src = d.img;
+      document.getElementById('profileName').textContent    = d.name;
+      document.getElementById('profileRole').textContent    = d.role;
+      document.getElementById('profileEmail').textContent   = d.email;
+      document.getElementById('profilePhone').textContent   = d.phone;
+      document.getElementById('profileJoined').textContent  = d.joined;
+      document.getElementById('queryHistory').textContent   = d.query;
+    }
+    // Restore prefs
+    if (localStorage.getItem('pref_noti') === '1') document.getElementById('notiToggle').checked = true;
+    if (localStorage.getItem('pref_loc')  === '1') document.getElementById('locToggle').checked  = true;
+    if (localStorage.getItem('darkMode')  === '1') {
+      document.getElementById('darkToggle').checked = true;
+      document.getElementById('pageBody').classList.add('dark');
+    }
+  }
+
+  function savePref(key, val) {
+    localStorage.setItem('pref_' + key, val ? '1' : '0');
+  }
+
+  function toggleDark(on) {
+    document.getElementById('pageBody').classList.toggle('dark', on);
+    localStorage.setItem('darkMode', on ? '1' : '0');
+  }
+
+  init();
+</script>
+</body>
+</html>
